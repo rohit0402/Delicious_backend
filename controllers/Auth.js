@@ -86,7 +86,7 @@ const getUser = async (req, res) => {
       return res.status(400).json({ success: false, message: "please signup" });
     }
 
-    res.status(200).json({ success: true, message: "user found" });
+    res.status(200).json({user, success: true, message: "user found" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }

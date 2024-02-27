@@ -13,11 +13,11 @@ router.put("/verifyOTP",verifyOTP);
 router.get("/getUser",verifyToken,getUser);
 
 //feature routes
-router.post("/addToCart",addToCart);
+router.post("/addToCart/:id", addToCart);
 router.delete("/removeFromCart",removeFromCart);
-router.get("/getCart",getCart);
-router.put("/incrementQuantity",incrementQuantity);
-router.put("/decrementQuantity",decrementQuantity);
+router.get("/getCart/:id",getCart);
+router.put("/incrementQuantity/:id",incrementQuantity);
+router.put("/decrementQuantity/:id",decrementQuantity);
 router.get("/checkout",verifyToken,checkout);
 router.get("/clearCart",verifyToken,clearCart);
 
