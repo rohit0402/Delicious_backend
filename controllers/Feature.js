@@ -83,22 +83,36 @@ const getCart = async (req, res) => {
 
 // remove from cart
 const removeFromCart = async (req, res) => {
-  let id = req.params.id;
+  let foodId = req.params.id;
+  let userId = req.body.userId; // Assuming userId is passed in the request body
 
   try {
-    let food = await Food.findByIdAndDelete({ _id: id });
+    // Find the user by their ID
+    let user = await User.findById(userId);
 
-    if (!food) {
-      return res
-        .status(400)
-        .json({ success: false, message: "food not found" });
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User not found" });
     }
 
-    return res.status(200).json({ success: true, message: "food removed" });
+    // Remove the food item ID from the user's cart array
+    user.cartItems = user.cartItems.filter(itemId => itemId.toString() !== foodId);
+
+    // Save the updated user document
+    await user.save();
+
+    // Delete the food item itself
+    let food = await Food.findByIdAndDelete(foodId);
+
+    if (!food) {
+      return res.status(400).json({ success: false, message: "Food not found" });
+    }
+
+    return res.status(200).json({ success: true, message: "Food removed from cart and database" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // increment in cart
 const incrementQuantity = async (req, res) => {
@@ -107,12 +121,12 @@ const incrementQuantity = async (req, res) => {
   try {
     let food = await Food.findByIdAndUpdate(
       { _id: id },
-      {
+      [{
         $set: {
           quantity: { $add: ["$quantity", 1] },
           totalPrice: { $multiply: ["$price", { $add: ["$quantity", 1] }] },
         },
-      },
+      }],
       { upsert: true, new: true }
     );
 
@@ -132,12 +146,12 @@ const decrementQuantity = async (req, res) => {
   try {
     let food = await Food.findByIdAndUpdate(
       { _id: id, quantity: { $gt: 0 } },
-      {
+      [{
         $set: {
           quantity: { $subtract: ["$quantity", 1] },
           totalPrice: { $subtract: ["$totalPrice", "$price"] },
         },
-      },
+      }],
       {
         upsert: true,
         new: true,
@@ -192,29 +206,25 @@ const checkout = async (req, res) => {
 };
 //clearCart
 const clearCart = async (req, res) => {
-  let userId = req.id;
+  const userId = req.body.userId;
 
   try {
-    const deletedItems = await Food.deleteMany({ userId });
+    // Delete all cart items associated with the user from the Food collection
+    await Food.deleteMany({ userId });
 
-    const deletedList = await Food.findOneAndUpdate(
-      { _id: id },
-      {
-        cartItems: [],
-      }
-    );
+    // Update the user document to clear the cart items
+    await User.updateOne({ _id: userId }, { cartItems: [] });
 
-    if (!deletedItems) {
-      return res
-        .status(400)
-        .json({ success: false, message: "failed to clear cart" });
-    }
-
-    return res.status(200).json({ success: true, message: " order confirmed" });
+    // Return success response
+    return res.status(200).json({ success: true, message: "Cart cleared successfully" });
   } catch (error) {
+    // Return error response
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
+
 
 module.exports = {
   addToCart,

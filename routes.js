@@ -14,12 +14,12 @@ router.get("/getUser",verifyToken,getUser);
 
 //feature routes
 router.post("/addToCart/:id", addToCart);
-router.delete("/removeFromCart",removeFromCart);
+router.delete("/removeFromCart/:id",removeFromCart);
 router.get("/getCart/:id",getCart);
 router.put("/incrementQuantity/:id",incrementQuantity);
 router.put("/decrementQuantity/:id",decrementQuantity);
 router.get("/checkout",verifyToken,checkout);
-router.get("/clearCart",verifyToken,clearCart);
+router.delete("/clearCart",verifyToken,clearCart);
 
 
 module.exports=router;
