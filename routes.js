@@ -1,5 +1,5 @@
 const { signup, login, logout, resetPassword, verifyOTP, getUser } = require("./controllers/Auth");
-const { addToCart, removeFromCart, getCart, incrementQuantity, decrementQuantity, checkout, clearCart } = require("./controllers/Feature");
+const { addToCart, removeFromCart, getCart, incrementQuantity, decrementQuantity, clearCart } = require("./controllers/Feature");
 const { verifyToken } = require("./middleware/verifyToken");
 
 const router=require("express").Router();
