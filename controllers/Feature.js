@@ -1,6 +1,5 @@
 const Food = require("../models/food");
 const User = require("../models/User");
-const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 //adding to cart
 const addToCart = async (req, res) => {
