@@ -11,7 +11,7 @@ const routes=require("./routes");
 connectdDB();
 
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:["http://localhost:5173","https://delicious-frontend-shjd.vercel.app/"],
     credentials:true,
 }));
 app.use(express.json());

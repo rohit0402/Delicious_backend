@@ -6,12 +6,9 @@ const stripe = require("stripe")(process.env.STRIPE_KEY);
 const addToCart = async (req, res) => {
   const userId = req.params.id;
   const { id, name, price, rating, image, quantity } = req.body;
-  console.log(name);
-  console.log(userId);
-  console.log(id);
+
   try {
     let existingItem = await Food.findOne({ id, userId: userId });
-    console.log(existingItem);
     if (existingItem) {
       existingItem.quantity += 1;
       existingItem.totalPrice = existingItem.price * existingItem.quantity;
@@ -172,38 +169,7 @@ const decrementQuantity = async (req, res) => {
   }
 };
 
-//checkout
-const checkout = async (req, res) => {
-  let userId = req.id;
 
-  try {
-    const cartItems = await Food.find({ userId });
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      line_items: cartItems.map((item) => {
-        return {
-          price_data: {
-            currency: "inr",
-            product_data: {
-              name: item.name,
-              images: [item.image],
-            },
-            unit_amount: item.price * 100,
-          },
-          quantity: item.quantity,
-        };
-      }),
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http//localhost:5173/",
-    });
-
-    res.json({ url: session.url });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
 //clearCart
 const clearCart = async (req, res) => {
   const userId = req.body.userId;
@@ -232,6 +198,5 @@ module.exports = {
   removeFromCart,
   incrementQuantity,
   decrementQuantity,
-  checkout,
   clearCart,
 };

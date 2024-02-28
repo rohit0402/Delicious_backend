@@ -8,8 +8,6 @@ const router=require("express").Router();
 router.post("/signup",signup);
 router.post("/login",login);
 router.get("/logout",logout);
-router.put("/resetPassword",resetPassword);
-router.put("/verifyOTP",verifyOTP);
 router.get("/getUser",verifyToken,getUser);
 
 //feature routes
@@ -18,7 +16,6 @@ router.delete("/removeFromCart/:id",removeFromCart);
 router.get("/getCart/:id",getCart);
 router.put("/incrementQuantity/:id",incrementQuantity);
 router.put("/decrementQuantity/:id",decrementQuantity);
-router.get("/checkout",verifyToken,checkout);
 router.delete("/clearCart",verifyToken,clearCart);
 
 
