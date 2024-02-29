@@ -70,13 +70,14 @@ const login = async (req, res) => {
 //logout
 const logout = async (req, res) => {
   try {
-    return res
-      .clearCookie("token")
-      .json({ success: true, message: "logged out" });
+    res.clearCookie("token");
+
+    return res.json({ success: true, message: "Logged out successfully" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 const getUser = async (req, res) => {
   const reqId = req.id;
