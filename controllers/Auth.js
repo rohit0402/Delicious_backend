@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const bcrypt = require("bcrypt");
+const bcryptjs=require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const { set } = require("mongoose");
 const nodemailer = require("nodemailer");
@@ -14,7 +14,7 @@ const signup = async (req, res) => {
       return res.status(400).json({ success: false, message: "please login" });
     }
 
-    const securePassword = await bcrypt.hash(password, 10);
+    const securePassword = await bcryptjs.hash(password, 10);
 
     const newuser = await User.create({
       name,
@@ -42,7 +42,7 @@ const login = async (req, res) => {
         .json({ success: false, message: "please sign up first" });
     }
 
-    let checkPassword = await bcrypt.compare(password, user.password);
+    let checkPassword = await bcryptjs.compare(password, user.password);
 
     if (!checkPassword) {
       return res
